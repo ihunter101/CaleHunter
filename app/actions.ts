@@ -3,7 +3,7 @@
 import prisma from "./lib/db";
 import { requireUser } from "./lib/hooks";
 import {parseWithZod} from "@conform-to/zod"
-import { onboardingSchemaValidation } from "./lib/zodSchema";
+import { onboardingSchemaValidation, settingSchema } from "./lib/zodSchema";
 import { redirect } from "next/navigation";
 
 export  async function OnboardingAction(prevState: any, formData: FormData){// the prevState is the previous state of the form needed for the useform in page.tsx onboarding route
@@ -38,4 +38,28 @@ export  async function OnboardingAction(prevState: any, formData: FormData){// t
     })
 
     return redirect("/onboarding/grant-id")
+}
+
+export async function SettingsActions(prevState: any, formData: FormData){
+    const session = await requireUser();
+
+    const submission = await parseWithZod(formData, {
+        schema: settingSchema,
+    });
+
+    if (submission.status !== "success") {
+        return submission.reply();
+    }
+
+    //
+    const user = await prisma.user.update({
+        where: {
+            id: session.user?.id,//this tells the program what user to update
+        },
+        data: {
+            name: submission.value.fullName,//we want to update the name
+            image: submission.value.image,//and update the profile pictire
+        }
+    });
+    return redirect("/dashboard")
 }

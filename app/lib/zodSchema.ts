@@ -49,3 +49,9 @@ export function onboardingSchemaValidation(options?: {
       fullName: z.string().min(2).max(150).refine((val) => val.length >= 5, "Full name must be no less than 5 or greater than 150 characters"),
       })
 }
+
+export const settingSchema = z.object({
+      fullName: z.string().min.(3).max(150),
+
+      profileImage: z.string(),
+})
