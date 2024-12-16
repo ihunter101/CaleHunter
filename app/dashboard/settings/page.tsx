@@ -25,7 +25,7 @@ interface iAppsProps {
     }
 
     return data;
-}
+};
 
 export default  async function Settingsroute({email, fullName, profileImage}:iAppsProps) {
     const session = await requireUser();
