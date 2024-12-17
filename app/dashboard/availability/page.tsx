@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { notFound } from "next/navigation";
 import { times } from "../../lib/times";
 import { SubmitButton } from "@/app/components/SumbitButton";
+import { updateAvailabilityAction } from "@/app/actions";
 
 
 async function getData(userId: string) {
@@ -32,16 +33,24 @@ export default async function AvailabilityRoute() {
                     In this section, you can manage your availability!
                 </CardDescription>
             </CardHeader>
-            <form>
+            <form action={updateAvailabilityAction}>
                 <CardContent className="flex flex-col gap-y-4">
                     {data.map((item) => (
                         <div key={item.id}//key needs to be unique and its used with id since the id is unique
                         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 items-center gap-4">
+
+                            <input type="hidden"
+                            name={`id-${item.id}`}//name is dynamic using template literal 
+                            value={item.id}/>
                             <div className="flex flex-col gap-x-3">
-                                <Switch defaultChecked={item.isActive}/> {/*the default check is set to is active which maps to the prisma availability module which contains an is active prop*/}
+
+                                <Switch name={`isActive-${item.id}`}//name is dynamic using template literal
+                                defaultChecked={item.isActive}/> {/*the default check is set to is active which maps to the prisma availability module which contains an is active prop*/}
                                 <p>{item.day}</p>
                             </div>
-                            <Select defaultValue={item.fromTime}>
+                            <Select 
+                            name={`fromTime-${item.id}`}//name is dynamic using template literal
+                            defaultValue={item.fromTime}>
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="From time">
 
@@ -61,7 +70,9 @@ export default async function AvailabilityRoute() {
                                 </SelectContent>
                             </Select>
 
-                            <Select defaultValue={item.tillTime}>
+                            <Select 
+                            name={`tillTime-${item.id}`}//name is dynamic using template literal
+                            defaultValue={item.tillTime}>
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Till time">
 
