@@ -7,11 +7,20 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Menu } from 'lucide-react'
 import { ThemeToggle } from '../components/ThemeToggle'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSubContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { 
+    DropdownMenu, 
+    DropdownMenuContent, 
+    DropdownMenuItem, 
+    DropdownMenuLabel, 
+    DropdownMenuSeparator, 
+    DropdownMenuSubContent, 
+    DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu'
 import { signOut } from '../lib/auth'
 import { requireUser } from '../lib/hooks'
 import prisma from '../lib/db'
 import { redirect } from 'next/navigation'
+import { Toaster } from '@/components/ui/sonner'
 
 async function getData(userId: string) {
     const data = await prisma.user.findUnique ({
@@ -116,7 +125,10 @@ export default async function DashboardLayout ({ children }: { children: ReactNo
                         {children}
                     </main>
                 </div>
-            </div>        
+            </div>    
+            <Toaster 
+            richColors
+            closeButton/>    
         </>
     )}
 

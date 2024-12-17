@@ -19,6 +19,10 @@ import { settingSchema } from "../lib/zodSchema";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { UploadDropzone } from "../lib/uploadthing";
+import { toast } from "sonner";
+import Image from "next/image";
+
 interface iAppsProps {
     fullName: string;
     email: string;
@@ -54,7 +58,7 @@ export function SettingForms({ fullName, email, profileImage }: iAppsProps) {
         <Card>
         <CardHeader>
             <CardTitle>Settings</CardTitle>
-            <CardDescription>Manage your account Settings</CardDescription>
+            <CardDescription>Manage your account Settings.</CardDescription>
         </CardHeader>
         <form id={form.id} onSubmit={form.onSubmit} action={action} noValidate>
             <CardContent className="flex flex-col gap-y-4">
@@ -69,7 +73,7 @@ export function SettingForms({ fullName, email, profileImage }: iAppsProps) {
 
                 </div>
 
-                <div className="flex flex -xol gap-y-2">
+                <div className="flex flex-col gap-y-2">
                     <Label>Email</Label>
                     <Input 
                     disabled
@@ -79,11 +83,18 @@ export function SettingForms({ fullName, email, profileImage }: iAppsProps) {
 
                 <div className="grid gap-y-5">
                     <Label>Profile Image</Label>
+                    <input 
+                    type="hidden"  
+                    name={fields.profileImage.name}
+                    key={fields.profileImage.key}
+                    value={currentProfileImage} />
                     {currentProfileImage? (
                         <div className="relative size-16">
-                            <img 
+                            <Image
                                 src= {currentProfileImage} 
-                                alt="Profile Image" 
+                                alt="Profile Image"
+                                width={300} 
+                                height={300}
                                 className="size-16 rounded-lg"/>
 
                             <Button 
@@ -96,10 +107,18 @@ export function SettingForms({ fullName, email, profileImage }: iAppsProps) {
                             </Button>
                         </div>
                         ): (
-                            <h1>No Profile Image</h1>
+                           <UploadDropzone 
+                           onClientUploadComplete={(res) => {
+                            setCurrentProfileImage(res[0].url);
+                            toast.success("profile image has been uploaded")
+                           }} 
+                           onUploadError={(error) => {console.log("Something went wrong with the upload", error);
+                            toast.error(error.message);
+                           }}
+                           endpoint={"imageUploader"}/>
                         )}
+                        <p className="text-red-500 text-sm">{fields.profileImage.errors}</p>
                 </div>
-
             </CardContent>
             <CardFooter>
               <SubmitButton text="Save changes"/>

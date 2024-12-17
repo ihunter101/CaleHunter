@@ -6,6 +6,7 @@ import {parseWithZod} from "@conform-to/zod"
 import { onboardingSchemaValidation, settingSchema } from "./lib/zodSchema";
 import { redirect } from "next/navigation";
 
+
 export  async function OnboardingAction(prevState: any, formData: FormData){// the prevState is the previous state of the form needed for the useform in page.tsx onboarding route
      const session = await requireUser();//get the user whose session is currently valid 
     //checking our form data against our zod schema 
@@ -33,7 +34,48 @@ export  async function OnboardingAction(prevState: any, formData: FormData){// t
         },
         data: {
             userName: submission.value.userName,
-            name: submission.value.fullName
+            name: submission.value.fullName,
+            availability: {
+                createMany:{
+                    data: [
+                        {
+                            day: "Monday",
+                            fromTime: "08:00",
+                            tillTime: "18:00",
+                        },
+                        {
+                            day: "Tuesday",
+                            fromTime: "08:00",
+                            tillTime: "18:00",
+                        },
+                        {
+                            day: "Wednesday",
+                            fromTime: "08:00",
+                            tillTime: "18:00",
+                        },
+                        {
+                            day: "Thursday",
+                            fromTime: "08:00",
+                            tillTime: "18:00",
+                        },
+                        {
+                            day: "Friday",
+                            fromTime: "08:00",
+                            tillTime: "18:00",
+                        },
+                        {
+                            day: "Saturday",
+                            fromTime: "08:00",
+                            tillTime: "18:00",
+                        },
+                        {
+                            day: "Sunday",
+                            fromTime: "08:00",
+                            tillTime: "18:00",
+                        }
+                    ],
+                },
+            },
         }
     })
 
@@ -58,7 +100,7 @@ export async function SettingsActions(prevState: any, formData: FormData){
         },
         data: {
             name: submission.value.fullName,//we want to update the name
-            image: submission.value.image,//and update the profile pictire
+            image: submission.value.profileImage,//and update the profile pictire
         }
     });
     return redirect("/dashboard")
